@@ -1,7 +1,8 @@
 class Player
 
-  attr_reader :bombs, :explosions, :x, :y, :index
+  attr_reader :bombs, :explosions, :x, :y, :index, :max_bombs
   def initialize(player_number, brain_class)
+    @max_bombs    = 3
     @index        = player_number
     @t_size       = Processor::TileSize
     #more animation to come
@@ -66,8 +67,12 @@ private
     end
   end
 
+  def bomb_present?
+    @bombs.detect {|bomb| bomb.at?(center_x, center_y)}
+  end
+
   def bombs!
-    if bomb? && !@bombs.detect {|bomb| bomb.at?(center_x, center_y)}
+    if bomb? && !bomb_present?
       @bombs << Bomb.new(center_x, center_y)
     end
     check_bomb_existance
@@ -120,6 +125,6 @@ private
   end
 
   def bomb?
-    @brain.bomb?
+    @brain.bomb? && max_bombs > bombs.count
   end
 end

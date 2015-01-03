@@ -48,7 +48,7 @@ class Processor
     end
 
     def start_game
-      @players << Player.new(0,KeyboardBrainOne)
+      @players << Player.new(0,SimpleBrain)
       @players << Player.new(1,BasicBrain)
       @window.set_delegate("Game")
     end
