@@ -1,3 +1,5 @@
+require "gosu"
+
 class Window < Gosu::Window
   def initialize(name)
     super(*Processor::Screen)
