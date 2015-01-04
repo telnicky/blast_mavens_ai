@@ -1,7 +1,7 @@
 class Player
 
   attr_reader :bombs, :explosions, :x, :y, :index, :max_bombs, :tile_size, :facing, :animation_sprites, :movement_ctl, :image_counter,
-    :image_index, :speed
+    :image_index, :speed, :brain
 
   def initialize(player_number, brain_class)
     @max_bombs    = 3
@@ -27,7 +27,7 @@ class Player
   end
 
   def draw
-    animation_sprites[facing][image_index].draw(@x, @y, 2)
+    animation_sprites[facing][image_index].draw(x, y, 2)
   end
 
   def update
@@ -42,17 +42,17 @@ class Player
   # projecting coordinates where player end up if decised to move given direction
   #FIXME: fix out balanced speed, move gap etc
   def no_collision?(direction)
-    target_x1 = @x + movement_ctl[direction].first[0] + movement_ctl[direction].last[0]
-    target_x2 = @x + movement_ctl[direction].first[0] + movement_ctl[direction].last[2]
-    target_y1 = @y + movement_ctl[direction].first[1] + movement_ctl[direction].last[1]
-    target_y2 = @y + movement_ctl[direction].first[1] + movement_ctl[direction].last[3]
+    target_x1 = x + movement_ctl[direction].first[0] + movement_ctl[direction].last[0]
+    target_x2 = x + movement_ctl[direction].first[0] + movement_ctl[direction].last[2]
+    target_y1 = y + movement_ctl[direction].first[1] + movement_ctl[direction].last[1]
+    target_y2 = y + movement_ctl[direction].first[1] + movement_ctl[direction].last[3]
     not_solid_at?(target_x1, target_y1) && not_solid_at?(target_x2, target_y2)
   end
 
 private
   def movement!
     image_counter_inc
-    move_direction = @brain.move
+    move_direction = brain.move
     if move_direction
       @image_index = 0 unless (0..2).include?(image_index)
       @image_index += 1 if image_counter % 5 == 0
@@ -103,11 +103,11 @@ private
   end
 
   def center_x
-    @x + 24
+    x + 24
   end
 
   def center_y
-    @y + 24
+    y + 24
   end
 
   def explode_bomb(bomb: nil, x: nil, y: nil)
@@ -143,6 +143,6 @@ private
   end
 
   def bomb?
-    @brain.bomb? && max_bombs > bombs.count
+    brain.bomb? && max_bombs > bombs.count
   end
 end
