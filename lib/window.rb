@@ -1,29 +1,26 @@
 require "gosu"
 
 class Window < Gosu::Window
-  def initialize(name)
+  attr_accessor :delegate
+
+  def initialize
     super(*Processor::Screen)
     self.caption = "Blast Mavens: Multiplayer Beta v0.1.0"
-    set_delegate(name)
   end
 
   def draw
-    @delegate.draw
+    delegate.draw if delegate
   end
 
   def update
-    @delegate.update
+    delegate.update if delegate
   end
 
   def button_down(id)
-    @delegate.button_down(id)
-  end
-
-  def set_delegate(name, opts={})
-    @delegate = Object.const_get(name).new(self, opts)
+    delegate.button_down(id) if delegate
   end
 
   def method_missing(sym, *args, &block)
-    @delegate.send(sym, *args, &block)
+    delegate.public_send(sym, *args, &block) if delegate
   end
 end

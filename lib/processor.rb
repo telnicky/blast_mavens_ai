@@ -42,7 +42,7 @@ class Processor
     end
 
     def center_for_coord(coord)
-      center = center_map.detect{|center, coords| coords.include?(coord)}
+      center = center_map.detect{ |_, coords| coords.include?(coord) }
       center && center.first
     end
 
@@ -51,7 +51,7 @@ class Processor
     end
 
     def game_over(death_toll)
-      window.set_delegate("GameOver", death_toll)
+      window.delegate = GameOver.new(window, death_toll)
     end
 
     def close
@@ -63,7 +63,9 @@ class Processor
     end
 
     def window
-      @window ||= Window.new("Game")
+      @window ||= Window.new.tap do |window|
+        window.delegate = Game.new(window)
+      end
     end
   end
 end
